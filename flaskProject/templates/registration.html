@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="/static/style/log-reg.css">
+</head>
+<body>
+    <form id="form" method="POST" action="/register">
+        <h1>Регистрация</h1>
+        <input type="text" id="firstName" name="firstName" placeholder="Введите имя" required>
+        <input type="text" id="lastName" name="lastName" placeholder="Введите фамилию" required>
+        <input type="tel" id="phone" name="phone" placeholder="Введите номер телефона" required>
+        <input type="password" id="password" name="password" placeholder="Введите пароль" required><br><br>
+        <button type="submit" id="registerBtn">Зарегистрироваться</button>
+        <p>Уже зарегистрированы? <a href="/">Войти</a></p>
+    </form>
+</body>
+</html>
