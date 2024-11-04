@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход</title>
+    <style>
+        /* static/style.css */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e0e0e0; /* Изменен цвет фона на более светлый */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+form {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    width: 350px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 28px;
+    margin-bottom: 25px;
+    color: #333333;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="password"] {
+    width: calc(100% - 24px);
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #bbbbbb;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="password"]:focus {
+    border-color: #66afe9;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff; /* Изменен цвет кнопки на синий */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3; /* Темнее при наведении */
+}
+
+p {
+    margin-top: 20px;
+    font-size: 0.95em;
+    color: #555555;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+    </style>
+</head>
+<body>
+    <form id="form" method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <h1>Вход</h1>
+
+        <input type="tel" id="phone" name="phone" placeholder="Введите номер телефона" required>
+
+        <input type="password" id="password" name="password" placeholder="Введите пароль" required><br><br>
+
+        <button type="submit" id="loginBtn">Войти</button>
+
+        <p>Нет аккаунта? <a href="{% url 'register' %}">Регистрация</a></p>
+
+        {% if error %}
+        <p style="color:red;">{{ error }}</p>
+        {% endif %}
+    </form>
+</body>
+</html>

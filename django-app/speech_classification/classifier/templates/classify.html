@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Классификация речи</title>
+    <style>/* static/style.css */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e0e0e0; /* Светлый фон страницы */
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #ffffff; /* Белый фон контейнера */
+    border-radius: 15px; /* Закругленные углы */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Увеличенная тень */
+    text-align: center;
+}
+
+input[type="file"] {
+    margin: 20px 0;
+}
+
+button {
+    background-color: #007bff; /* Синий цвет кнопки */
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3; /* Более темный синий при наведении */
+}
+
+.audio-container {
+    margin-top: 20px;
+}
+
+.audio-container audio {
+    width: 100%;
+}
+
+.navbar {
+    background-color: #007bff; /* Синий фон навигационной панели */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    position: relative; /* Для корректного позиционирования кнопки выхода */
+}
+
+.navbar a {
+    color: white;
+    padding: 14px 20px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.navbar a:hover {
+    background-color: #0056b3; /* Темнее при наведении */
+}
+
+.navbar .logout {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+h1 {
+    color: #333333;
+    margin-bottom: 25px;
+}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <a href="/classification">Классификация</a>
+    <a href="/generation">Генерация</a>
+    <a href="{% url 'logout' %}" class="logout">Выход</a>
+
+</div>
+
+<div class="container">
+    <h1>Классификация речи</h1>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="file" accept=".wav">
+        <br>
+        <button type="submit">Классифицировать</button>
+    </form>
+
+    {% if result %}
+    <h2>Результат: {{ result }}</h2>
+    <div class="audio-container">
+        <audio controls>
+            <source src="{{ audio_url }}" type="audio/wav">
+            Ваш браузер не поддерживает аудиоэлемент.
+        </audio>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

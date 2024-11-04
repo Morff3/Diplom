@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Генерация речи</title>
+    <style>/* static/style.css */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e0e0e0; /* Светлый фон страницы */
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px; /* Увеличен отступ для внутреннего содержимого */
+    background-color: #ffffff; /* Белый фон контейнера */
+    border-radius: 15px; /* Более скругленные углы */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Увеличена тень */
+    text-align: center;
+}
+
+textarea {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 20px;
+    padding: 12px; /* Добавлен внутренний отступ */
+    border: 1px solid #bbbbbb; /* Обновлен цвет рамки */
+    border-radius: 8px; /* Более скругленные углы */
+    resize: none;
+    font-size: 16px;
+    font-family: inherit; /* Использует тот же шрифт, что и тело */
+}
+
+textarea:focus {
+    border-color: #66afe9; /* Цвет рамки при фокусе */
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff; /* Синий цвет кнопки */
+    color: white;
+    border: none;
+    border-radius: 8px; /* Более скругленные углы */
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3; /* Темно-синий при наведении */
+}
+
+.audio-container {
+    margin-top: 20px;
+}
+
+.audio-container audio {
+    width: 100%;
+}
+
+.navbar {
+    background-color: #007bff; /* Синий фон навигационной панели */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    position: relative; /* Для позиционирования кнопки выхода */
+}
+
+.navbar a {
+    color: white;
+    padding: 14px 20px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.navbar a:hover {
+    background-color: #0056b3; /* Темнее при наведении */
+}
+
+.navbar .logout {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+h1 {
+    color: #333333;
+    margin-bottom: 25px;
+}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <a href="{% url 'classify_speech' %}">Классификация</a>
+    <a href="{% url 'generation' %}">Генерация</a>
+    <a href="{% url 'logout' %}" class="logout">Выход</a>
+
+</div>
+
+<div class="container">
+    <h1>Генерация речи</h1>
+    <textarea id="textInput" placeholder="Введите текст для генерации"></textarea>
+    <br>
+    <button onclick="generateAudio()">Сгенерировать</button>
+
+    <div class="audio-container" id="audioContainer" style="display: none;">
+        <audio id="audioPlayer" controls></audio>
+        <a id="downloadLink" class="download-link" download>Скачать файл</a>
+    </div>
+
+</div>
+
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+    function generateAudio() {
+        const text = document.getElementById('textInput').value;
+
+        fetch("{% url 'generate_audio' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrftoken
+            },
+            body: new URLSearchParams({
+                'text': text
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.audio_url) {
+                const audioUrl = data.audio_url;
+                const audioPlayer = document.getElementById('audioPlayer');
+                const downloadLink = document.getElementById('downloadLink');
+                const audioContainer = document.getElementById('audioContainer');
+
+                audioPlayer.src = audioUrl;
+                downloadLink.href = audioUrl;
+                downloadLink.innerText = "Скачать сгенерированный файл";
+
+                audioContainer.style.display = 'block';
+            } else {
+                alert(data.error || 'Ошибка генерации');
+            }
+        })
+        .catch(error => console.error('Ошибка:', error));
+    }
+</script>
+
+</body>
+</html>
